@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
@@ -21,12 +19,18 @@ class ProductItem extends StatelessWidget {
           ),
           leading: IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.favorite),
+            icon: Icon(
+              Icons.favorite,
+              color: Theme.of(context).highlightColor,
+            ),
           ),
           backgroundColor: Colors.black54,
           trailing: IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.shopping_cart),
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Theme.of(context).highlightColor,
+            ),
           ),
         ),
         child: Image.network(

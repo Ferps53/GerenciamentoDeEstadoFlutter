@@ -12,8 +12,7 @@ class ProductOverViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        shadowColor: Colors.black87,
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: const Text(
           "Minha Loja!",
