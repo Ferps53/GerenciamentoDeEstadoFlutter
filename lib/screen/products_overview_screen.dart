@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_de_estado/models/cart.dart';
+import 'package:gerenciamento_de_estado/widget/cart_badge.dart';
+import 'package:provider/provider.dart';
 import '../widget/product_grid.dart';
 
 enum FilterOptions {
@@ -44,6 +47,18 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
                 }
               });
             },
+          ),
+          Consumer<Cart>(
+            builder: (context, cart, child) => CartBadge(
+              value: cart.itensCount.toString(),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ],
         title: const Text(
