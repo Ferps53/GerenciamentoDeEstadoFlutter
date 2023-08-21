@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciamento_de_estado/models/product_list.dart';
-import 'package:provider/provider.dart';
 import '../widget/product_grid.dart';
 
 enum FilterOptions {
@@ -8,12 +6,18 @@ enum FilterOptions {
   All,
 }
 
-class ProductOverViewScreen extends StatelessWidget {
+class ProductOverViewScreen extends StatefulWidget {
   const ProductOverViewScreen({super.key});
 
   @override
+  State<ProductOverViewScreen> createState() => _ProductOverViewScreenState();
+}
+
+class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
+  bool _showFavoriteOnly = false;
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -23,20 +27,22 @@ class ProductOverViewScreen extends StatelessWidget {
             color: Colors.white,
             itemBuilder: (_) => [
               const PopupMenuItem(
-                child: const Text("Somente Favoritos"),
                 value: FilterOptions.Favorite,
+                child: Text("Somente Favoritos"),
               ),
               const PopupMenuItem(
-                child: const Text("Todos"),
                 value: FilterOptions.All,
+                child: Text("Todos"),
               ),
             ],
             onSelected: (FilterOptions selectedValue) {
-              if (selectedValue == FilterOptions.Favorite) {
-                provider.showFavoritesOnly();
-              } else {
-                provider.showAll();
-              }
+              setState(() {
+                if (selectedValue == FilterOptions.Favorite) {
+                  _showFavoriteOnly = true;
+                } else {
+                  _showFavoriteOnly = false;
+                }
+              });
             },
           ),
         ],
@@ -45,7 +51,7 @@ class ProductOverViewScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: const ProductGrid(),
+      body: ProductGrid(_showFavoriteOnly),
     );
   }
 }
