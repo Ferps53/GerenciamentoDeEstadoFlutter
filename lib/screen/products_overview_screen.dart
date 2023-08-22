@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/cart.dart';
+import 'package:gerenciamento_de_estado/utils/app_routes.dart';
 import 'package:gerenciamento_de_estado/widget/cart_badge.dart';
 import 'package:provider/provider.dart';
 import '../widget/product_grid.dart';
@@ -50,7 +51,9 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
           ),
           Consumer<Cart>(
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.CART);
+              },
               icon: const Icon(
                 Icons.shopping_cart,
                 color: Colors.white,
