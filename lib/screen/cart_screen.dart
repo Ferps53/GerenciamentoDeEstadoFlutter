@@ -9,7 +9,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Cart cart = Provider.of(context);
-    final items = cart.items.values;
+    final items = cart.items.values.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +73,7 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: items.length,
               itemBuilder: (context, index) => CartItemWidget(
-                cartItem: items.elementAt(index),
+                cartItem: items[index],
               ),
             ),
           ),
