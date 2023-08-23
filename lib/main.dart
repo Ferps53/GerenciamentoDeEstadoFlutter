@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/order_list.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:gerenciamento_de_estado/screen/cart_screen.dart';
+import 'package:gerenciamento_de_estado/screen/orders_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_detail_screen.dart';
 import 'package:gerenciamento_de_estado/screen/products_overview_screen.dart';
 import 'package:gerenciamento_de_estado/utils/app_routes.dart';
@@ -38,10 +39,11 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
           useMaterial3: true,
         ),
-        home: const ProductOverViewScreen(),
         routes: {
+          AppRoutes.HOME: (context) => const ProductOverViewScreen(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailScreen(),
           AppRoutes.CART: (context) => const CartScreen(),
+          AppRoutes.ORDERS: (context) => const OrdersScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),
