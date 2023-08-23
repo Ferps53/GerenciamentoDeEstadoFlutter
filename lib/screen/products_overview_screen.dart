@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/cart.dart';
 import 'package:gerenciamento_de_estado/utils/app_routes.dart';
@@ -24,6 +26,7 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         actions: [

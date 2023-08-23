@@ -51,10 +51,7 @@ class Cart with ChangeNotifier {
   }
 
   void removeItem(String productId) {
-    print("Id: " + productId);
-    print("Quantidade antes: ${_items.length}");
     _items.removeWhere((key, value) => key == productId);
-    print("Quantidade depois: ${_items.length}");
     notifyListeners();
   }
 
