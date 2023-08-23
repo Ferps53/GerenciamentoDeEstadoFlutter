@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -43,6 +42,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _submitForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
     _formKey.currentState?.save();
     final newProduct = Product(
       description: _formData["description"] as String,
@@ -51,6 +56,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       imageUrl: _formData["imageUrl"] as String,
       price: _formData["price"] as double,
     );
+  }
+
+  bool isImageUrlValid(String url) {
+    bool isValid = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWith = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+
+    return isValid && endsWith;
   }
 
   @override
@@ -81,6 +95,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 decoration: const InputDecoration(labelText: "Nome"),
                 textInputAction: TextInputAction.next,
                 onSaved: (name) => _formData['name'] = name ?? '',
+                validator: (_name) {
+                  final name = _name ?? '';
+                  if (name.trim().isEmpty) {
+                    return "Nome é Obrigatório";
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Descrição"),
@@ -89,6 +110,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 maxLines: 3,
                 onSaved: (description) =>
                     _formData['description'] = description ?? '',
+                validator: (_description) {
+                  final description = _description ?? '';
+                  if (description.trim().isEmpty) {
+                    return "Descrição é Obrigatória!";
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Preço"),
@@ -98,6 +126,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     const TextInputType.numberWithOptions(decimal: true),
                 onSaved: (price) =>
                     _formData['price'] = double.parse(price ?? '0'),
+                validator: (_price) {
+                  final priceString = _price ?? '';
+                  final price = double.tryParse(priceString) ?? -1;
+
+                  if (price <= 0) {
+                    return "Informe um preço válido";
+                  }
+                  return null;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -113,6 +150,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       keyboardType: TextInputType.url,
                       onSaved: (imageUrl) =>
                           _formData['imageUrl'] = imageUrl ?? '',
+                      validator: (_imageUrl) {
+                        final imageUrl = _imageUrl ?? '';
+                        if (!isImageUrlValid(imageUrl)) {
+                          return "Informe uma imagem valida!";
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   Container(
