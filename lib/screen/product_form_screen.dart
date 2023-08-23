@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/product.dart';
+import 'package:gerenciamento_de_estado/models/product_list.dart';
+import 'package:provider/provider.dart';
 
 import '../widget/app_drawer.dart';
 
@@ -56,6 +58,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       imageUrl: _formData["imageUrl"] as String,
       price: _formData["price"] as double,
     );
+
+    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   bool isImageUrlValid(String url) {
