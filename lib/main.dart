@@ -4,6 +4,7 @@ import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:gerenciamento_de_estado/screen/cart_screen.dart';
 import 'package:gerenciamento_de_estado/screen/orders_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_detail_screen.dart';
+import 'package:gerenciamento_de_estado/screen/product_form_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_screen.dart';
 import 'package:gerenciamento_de_estado/screen/products_overview_screen.dart';
 import 'package:gerenciamento_de_estado/utils/app_routes.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.CART: (context) => const CartScreen(),
           AppRoutes.ORDERS: (context) => const OrdersScreen(),
           AppRoutes.PRODUCT_MANAGER: (context) => const ProductScreen(),
+          AppRoutes.PRODUCT_FORM: (context) => const ProductFormScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
+import 'package:gerenciamento_de_estado/utils/app_routes.dart';
 import 'package:gerenciamento_de_estado/widget/app_drawer.dart';
 import 'package:gerenciamento_de_estado/widget/product_item.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,17 @@ class ProductScreen extends StatelessWidget {
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: Text("Gerenciador de Produtos"),
+        title: const Text("Gerenciar Produtos"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM);
+            },
+            icon: const Icon(
+              Icons.add,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
