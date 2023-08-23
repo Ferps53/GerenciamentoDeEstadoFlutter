@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/cart.dart';
+import 'package:gerenciamento_de_estado/models/order_list.dart';
 import 'package:gerenciamento_de_estado/widget/cart_item.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,13 @@ class CartScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<OrderList>(
+                        context,
+                        listen: false,
+                      ).addOrder(cart);
+                      cart.clear();
+                    },
                     style: TextButton.styleFrom(
                       textStyle: TextStyle(
                         color: Theme.of(context).primaryColor,
