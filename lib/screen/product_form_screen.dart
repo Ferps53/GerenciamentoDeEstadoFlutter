@@ -1,4 +1,8 @@
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_de_estado/models/product.dart';
 
 import '../widget/app_drawer.dart';
 
@@ -12,8 +16,12 @@ class ProductFormScreen extends StatefulWidget {
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _priceFocus = FocusNode();
   final _descriptionFocus = FocusNode();
+
   final _imageUrlFocus = FocusNode();
   final _imageUrlController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  final _formData = <String, Object>{};
 
   @override
   void initState() {
@@ -31,8 +39,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void updateImage() {
-    print("Update");
     setState(() {});
+  }
+
+  void _submitForm() {
+    _formKey.currentState?.save();
+    final newProduct = Product(
+      description: _formData["description"] as String,
+      id: Random().nextDouble().toString(),
+      title: _formData["name"] as String,
+      imageUrl: _formData["imageUrl"] as String,
+      price: _formData["price"] as double,
+    );
   }
 
   @override
@@ -44,8 +62,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         foregroundColor: Colors.white,
         centerTitle: true,
         title: const Text("Formulário de Produto"),
+        actions: [
+          IconButton(
+            onPressed: _submitForm,
+            icon: const Icon(
+              Icons.save,
+            ),
+          ),
+        ],
       ),
       body: Form(
+        key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: ListView(
@@ -53,12 +80,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               TextFormField(
                 decoration: const InputDecoration(labelText: "Nome"),
                 textInputAction: TextInputAction.next,
+                onSaved: (name) => _formData['name'] = name ?? '',
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Descrição"),
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocus,
                 maxLines: 3,
+                onSaved: (description) =>
+                    _formData['description'] = description ?? '',
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Preço"),
@@ -66,18 +96,23 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 textInputAction: TextInputAction.next,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
+                onSaved: (price) =>
+                    _formData['price'] = double.parse(price ?? '0'),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: TextFormField(
+                      onFieldSubmitted: (_) => _submitForm(),
                       focusNode: _imageUrlFocus,
                       controller: _imageUrlController,
                       decoration:
                           const InputDecoration(labelText: "Url da Imagem"),
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.url,
+                      onSaved: (imageUrl) =>
+                          _formData['imageUrl'] = imageUrl ?? '',
                     ),
                   ),
                   Container(
@@ -100,7 +135,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           )
                         : FittedBox(
                             fit: BoxFit.cover,
-                            child: Image.network(_imageUrlController.text),
+                            child: Image.network(
+                              _imageUrlController.text,
+                              width: 100,
+                              height: 100,
+                            ),
                           ),
                   ),
                 ],
