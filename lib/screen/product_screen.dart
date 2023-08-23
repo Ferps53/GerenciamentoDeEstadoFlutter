@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:gerenciamento_de_estado/widget/app_drawer.dart';
+import 'package:gerenciamento_de_estado/widget/product_item.dart';
 import 'package:provider/provider.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -21,7 +22,12 @@ class ProductScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: ListView.builder(
           itemCount: productList.itemsCount,
-          itemBuilder: (context, index) => Text("ao potencia"),
+          itemBuilder: (context, index) => Column(children: [
+            ProductItem(
+              product: productList.items[index],
+            ),
+            const Divider(),
+          ]),
         ),
       ),
     );
