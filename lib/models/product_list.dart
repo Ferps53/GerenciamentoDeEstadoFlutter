@@ -36,12 +36,10 @@ class ProductList with ChangeNotifier {
   }
 
   void removeProduct(Product oldProduct) {
-    int index = _items.indexWhere(
-      (element) => element.id == oldProduct.id,
-    );
+    int index = _items.indexWhere((element) => element.id == oldProduct.id);
 
     if (index >= 0) {
-      _items.indexWhere(
+      _items.removeWhere(
         (p) => p.id == oldProduct.id,
       );
       notifyListeners();
