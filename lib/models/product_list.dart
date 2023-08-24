@@ -31,6 +31,20 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       _items[index] = newProduct;
+      notifyListeners();
+    }
+  }
+
+  void removeProduct(Product oldProduct) {
+    int index = _items.indexWhere(
+      (element) => element.id == oldProduct.id,
+    );
+
+    if (index >= 0) {
+      _items.indexWhere(
+        (p) => p.id == oldProduct.id,
+      );
+      notifyListeners();
     }
   }
 

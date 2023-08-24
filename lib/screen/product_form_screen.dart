@@ -117,7 +117,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: _formData['title'] as String,
+                initialValue: _formData['title']?.toString(),
                 decoration: const InputDecoration(labelText: "Nome"),
                 textInputAction: TextInputAction.next,
                 onSaved: (name) => _formData['name'] = name ?? '',
@@ -130,7 +130,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               TextFormField(
-                initialValue: _formData['description'] as String,
+                initialValue: _formData['description']?.toString(),
                 decoration: const InputDecoration(labelText: "Descrição"),
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocus,
