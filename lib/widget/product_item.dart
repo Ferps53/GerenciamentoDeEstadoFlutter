@@ -14,6 +14,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msg = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -37,7 +38,7 @@ class ProductItem extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                showDialog(
+                showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text("Exluir Produto"),
@@ -45,23 +46,36 @@ class ProductItem extends StatelessWidget {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(false);
                         },
                         child: const Text("Não"),
                       ),
                       TextButton(
                         onPressed: () {
-                          Provider.of<ProductList>(
-                            context,
-                            listen: false,
-                          ).removeProduct(product);
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         },
                         child: const Text("Sim"),
                       ),
                     ],
                   ),
-                );
+                ).then((value) async {
+                  if (value ?? false) {
+                    try {
+                      await Provider.of<ProductList>(
+                        context,
+                        listen: false,
+                      ).removeProduct(product);
+                    } catch (error) {
+                      msg.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            error.toString(),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                });
               },
               icon: Icon(
                 color: Theme.of(context).colorScheme.error,
