@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gerenciamento_de_estado/data/dummy_data.dart';
 import 'package:gerenciamento_de_estado/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://shop-ferps53-default-rtdb.firebaseio.com/';
-  final List<Product> _items = dummyProducts;
+  final _baseUrl =
+      'https://shop-ferps53-default-rtdb.firebaseio.com/products.json';
+  final List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -18,13 +18,32 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
+  Future<void> loadProducts() async {
+    _items.clear();
+    final response = await http.get(Uri.parse(_baseUrl));
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          imageUrl: productData['iamgeUrl'],
+          price: productData['price'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners();
+  }
+
   List<Product> get favoriteItems {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product product) {
-    final future = http.post(
-      Uri.parse('$_baseUrl/products.json'),
+  Future<void> addProduct(Product product) async {
+    final response = await http.post(
+      Uri.parse(_baseUrl),
       body: jsonEncode(
         {
           'title': product.title,
@@ -36,19 +55,17 @@ class ProductList with ChangeNotifier {
       ),
     );
 
-    return future.then<void>((response) {
-      final id = jsonDecode(response.body)['name'];
-      _items.add(
-        Product(
-          description: product.description,
-          id: id,
-          title: product.title,
-          imageUrl: product.imageUrl,
-          price: product.price,
-        ),
-      );
-      notifyListeners();
-    });
+    final id = jsonDecode(response.body)['name'];
+    _items.add(
+      Product(
+        description: product.description,
+        id: id,
+        title: product.title,
+        imageUrl: product.imageUrl,
+        price: product.price,
+      ),
+    );
+    notifyListeners();
   }
 
   Future<void> updateProduct(Product newProduct) {
@@ -75,6 +92,7 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
+    print(_baseUrl);
     bool hasId = data['id'] != null;
 
     final newProduct = Product(

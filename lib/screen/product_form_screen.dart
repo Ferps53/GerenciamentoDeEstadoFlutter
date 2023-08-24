@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gerenciamento_de_estado/models/product.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +66,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     setState(() {});
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     setState(() => _isLoading = true);
@@ -74,10 +75,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       return;
     }
     _formKey.currentState?.save();
-    Provider.of<ProductList>(context, listen: false)
-        .saveProduct(_formData)
-        .catchError((error) {
-      return showDialog(
+    try {
+      await Provider.of<ProductList>(context, listen: false)
+          .saveProduct(_formData);
+      Navigator.of(context).pop();
+    } catch (error) {
+      print(error.toString());
+      return await showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text("Ocorreu um erro :("),
@@ -92,11 +96,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           ],
         ),
       );
-    }).then((value) {
-      Navigator.of(context).pop();
-
+    } finally {
       setState(() => _isLoading = false);
-    });
+    }
   }
 
   bool isImageUrlValid(String url) {
