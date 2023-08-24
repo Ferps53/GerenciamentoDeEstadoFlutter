@@ -89,6 +89,10 @@ class ProductList with ChangeNotifier {
     }
   }
 
+  /*Esse é o modelo de deleção Otmista, 
+    ele consiste em deletar o produto no front antes do backend.
+    Dessa forma, o front tem um visual mais ágil!
+  */
   Future<void> removeProduct(Product product) async {
     int index = _items.indexWhere((element) => element.id == product.id);
 

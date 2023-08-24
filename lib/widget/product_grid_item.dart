@@ -18,6 +18,7 @@ class ProductGridItem extends StatelessWidget {
       context,
       listen: false,
     );
+    final msg = ScaffoldMessenger.of(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -28,8 +29,18 @@ class ProductGridItem extends StatelessWidget {
           ),
           leading: Consumer<Product>(
             builder: (context, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavorite();
+              onPressed: () async {
+                try {
+                  await product.toggleFavorite();
+                } catch (error) {
+                  msg.clearSnackBars();
+                  msg.showSnackBar(SnackBar(
+                    content: Text(
+                      error.toString(),
+                    ),
+                    duration: const Duration(seconds: 2),
+                  ));
+                }
               },
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -40,8 +51,8 @@ class ProductGridItem extends StatelessWidget {
           backgroundColor: Colors.black54,
           trailing: IconButton(
             onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
+              msg.hideCurrentSnackBar();
+              msg.showSnackBar(
                 SnackBar(
                   content: const Text("Produto Adicionado com sucesso"),
                   duration: const Duration(seconds: 2),
