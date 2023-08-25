@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/order_list.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
+import 'package:gerenciamento_de_estado/screen/auth_screen.dart';
 import 'package:gerenciamento_de_estado/screen/cart_screen.dart';
 import 'package:gerenciamento_de_estado/screen/orders_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_detail_screen.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         routes: {
+          AppRoutes.AUTH: (context) => const AuthScreen(),
           AppRoutes.HOME: (context) => const ProductOverViewScreen(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailScreen(),
           AppRoutes.CART: (context) => const CartScreen(),
