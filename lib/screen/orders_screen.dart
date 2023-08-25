@@ -14,6 +14,13 @@ class OrdersScreen extends StatefulWidget {
 class _OrdersScreenState extends State<OrdersScreen> {
   bool _isLoading = true;
 
+  Future<void> _refreshOrders(BuildContext context) {
+    return Provider.of<OrderList>(
+      context,
+      listen: false,
+    ).loadOrders();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,16 +43,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
         foregroundColor: Colors.white,
         title: const Text("Meus Pedidos"),
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: orderList.itemsCount,
-              itemBuilder: (context, index) {
-                return OrderWidget(order: orderList.items[index]);
-              },
-            ),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshOrders(context),
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemCount: orderList.itemsCount,
+                itemBuilder: (context, index) {
+                  return OrderWidget(order: orderList.items[index]);
+                },
+              ),
+      ),
     );
   }
 }
