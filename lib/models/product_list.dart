@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 import '../utils/url.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = [];
+  final String _token;
+  List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -19,9 +20,16 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
+  List<Product> get favoriteItems {
+    return _items.where((prod) => prod.isFavorite).toList();
+  }
+
+  ProductList(this._items, this._token);
+
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http.get(Uri.parse("${UrlList.PRODUCT}.json"));
+    final response =
+        await http.get(Uri.parse("${UrlList.PRODUCT}.json?auth=$_token"));
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
       _items.add(
@@ -36,10 +44,6 @@ class ProductList with ChangeNotifier {
       );
     });
     notifyListeners();
-  }
-
-  List<Product> get favoriteItems {
-    return _items.where((prod) => prod.isFavorite).toList();
   }
 
   Future<void> addProduct(Product product) async {
