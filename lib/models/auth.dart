@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_de_estado/data/store.dart';
 import 'package:gerenciamento_de_estado/utils/exceptions/auth_exception.dart';
 import 'package:http/http.dart' as http;
 
@@ -59,9 +60,36 @@ class Auth with ChangeNotifier {
           ),
         ),
       );
+
+      Store.saveMap("userData", {
+        'token': _token,
+        'email': _email,
+        'uid': _uid,
+        'expDate': _expDate!.toIso8601String(),
+      });
+
       _autoSignOut();
       notifyListeners();
     }
+  }
+
+  Future<void> tryAutoLogin() async {
+    if (isAuth) return;
+
+    final userData = await Store.getMap('userData');
+
+    if (userData.isEmpty) return;
+
+    final expiryDate = DateTime.parse(userData["expDate"]);
+    if (expiryDate.isBefore(DateTime.now())) return;
+
+    _token = userData['token'];
+    _email = userData['email'];
+    _uid = userData['uid'];
+    _expDate = expiryDate;
+
+    _autoSignOut();
+    notifyListeners();
   }
 
   Future<void> signUp(String email, String password) async {
@@ -78,7 +106,7 @@ class Auth with ChangeNotifier {
     _expDate = null;
     _uid = null;
     _clearAutoSignOut();
-    notifyListeners();
+    Store.remove("userData").then((value) => notifyListeners());
   }
 
   void _clearAutoSignOut() {
