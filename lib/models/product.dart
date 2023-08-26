@@ -27,10 +27,10 @@ class Product with ChangeNotifier {
   }
 
   final _baseUrl = 'https://shop-ferps53-default-rtdb.firebaseio.com/products';
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(String token) async {
     _toggleFavorite();
     final response = await http.patch(
-      Uri.parse("$_baseUrl/$id.jso"),
+      Uri.parse("$_baseUrl/$id.json?auth=$token"),
       body: jsonEncode({"isFavorite": isFavorite}),
     );
 
