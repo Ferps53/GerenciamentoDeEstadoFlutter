@@ -10,6 +10,7 @@ import '../utils/url.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
+  final String _uid;
   List<Product> _items = [];
 
   List<Product> get items {
@@ -24,14 +25,23 @@ class ProductList with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  ProductList(this._items, this._token);
+  ProductList(this._items, this._token, this._uid);
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response =
-        await http.get(Uri.parse("${UrlList.PRODUCT}.json?auth=$_token"));
+    final response = await http.get(
+      Uri.parse("${UrlList.PRODUCT}.json?auth=$_token"),
+    );
+
+    final favResponse = await http
+        .get(Uri.parse("${UrlList.USER_FAVORITE}/$_uid.json?auth=$_token"));
+
+    Map<String, dynamic> favData =
+        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -39,6 +49,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           imageUrl: productData['iamgeUrl'],
           price: productData['price'],
+          isFavorite: isFavorite,
         ),
       );
     });

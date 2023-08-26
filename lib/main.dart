@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/models/auth.dart';
-import 'package:gerenciamento_de_estado/models/order.dart';
 import 'package:gerenciamento_de_estado/models/order_list.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:gerenciamento_de_estado/screen/auth_or_home.dart';
@@ -29,11 +28,12 @@ class MyApp extends StatelessWidget {
           create: (_) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductList>(
-          create: (_) => ProductList([], ''),
+          create: (_) => ProductList([], '', ''),
           update: (context, auth, previous) {
             return ProductList(
               previous?.items ?? [],
               auth.token ?? "",
+              auth.uid ?? "",
             );
           },
         ),
