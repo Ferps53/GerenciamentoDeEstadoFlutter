@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbols.dart';
 import 'package:intl/intl.dart';
 
 import '../models/order.dart';

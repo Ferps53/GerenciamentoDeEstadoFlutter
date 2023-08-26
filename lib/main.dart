@@ -9,6 +9,7 @@ import 'package:gerenciamento_de_estado/screen/product_detail_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_form_screen.dart';
 import 'package:gerenciamento_de_estado/screen/product_screen.dart';
 import 'package:gerenciamento_de_estado/utils/app_routes.dart';
+import 'package:gerenciamento_de_estado/utils/custom_route.dart';
 import 'package:provider/provider.dart';
 import 'models/cart.dart';
 
@@ -54,11 +55,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primaryColor: Colors.purple,
-          highlightColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-          useMaterial3: true,
-        ),
+            primaryColor: Colors.purple,
+            highlightColor: Colors.deepOrange,
+            fontFamily: 'Lato',
+            useMaterial3: true,
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomTransitionBuilder(),
+              TargetPlatform.iOS: CustomTransitionBuilder(),
+            })),
         routes: {
           AppRoutes.AUTH: (context) => const AuthOrHome(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailScreen(),
