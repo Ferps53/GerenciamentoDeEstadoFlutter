@@ -1,7 +1,6 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:gerenciamento_de_estado/models/product.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,9 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_de_estado/models/auth.dart';
+import 'package:gerenciamento_de_estado/utils/exceptions/auth_exception.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode { SingUp, Login }
 
@@ -13,15 +16,79 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   AuthMode _authMode = AuthMode.Login;
 
-  Map<String, String> _authData = {
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignup() => _authMode == AuthMode.SingUp;
+
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.SingUp;
+      } else {
+        _authMode = AuthMode.Login;
+      }
+    });
+  }
+
+  final Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
 
-  void _submit() {}
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            title: const Text("Ocorreu um erro"),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Fechar"),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+    Auth auth = Provider.of(context, listen: false);
+
+    try {
+      if (_isLogin()) {
+        await auth.signIn(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      } else {
+        await auth.signUp(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog("Ocorreu um erro inesperado!!!!");
+    }
+
+    setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +99,11 @@ class _AuthFormState extends State<AuthForm> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
-        height: 320,
+        height: _isLogin() ? 310 : 400,
         width: deviceSize.width * 0.75,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -49,7 +117,7 @@ class _AuthFormState extends State<AuthForm> {
                   if (email.trim().isEmpty || !email.contains('@')) {
                     return "Informe um email válido";
                   }
-                  ;
+                  return null;
                 },
               ),
               TextFormField(
@@ -68,14 +136,14 @@ class _AuthFormState extends State<AuthForm> {
                   return null;
                 },
               ),
-              if (_authMode == AuthMode.SingUp)
+              if (_isSignup())
                 TextFormField(
                     decoration: const InputDecoration(
                       labelText: 'Confirmar Senha',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     obscureText: true,
-                    validator: _authMode == AuthMode.Login
+                    validator: _isLogin()
                         ? null
                         : (_password) {
                             final password = _password ?? '';
@@ -87,16 +155,27 @@ class _AuthFormState extends State<AuthForm> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: _submit,
+              _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ElevatedButton(
+                      onPressed: _submit,
+                      child: Text(
+                        _isLogin() ? 'ENTRAR' : 'REGISTRAR',
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 8,
+                      )),
+                    ),
+              const Spacer(),
+              TextButton(
+                onPressed: _switchAuthMode,
                 child: Text(
-                  _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
+                  _isLogin() ? "DESEJA REGISTRAR?" : "JÁ POSSUÍ CONTA?",
                 ),
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 8,
-                )),
               ),
             ],
           ),

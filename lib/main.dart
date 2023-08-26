@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciamento_de_estado/models/auth.dart';
 import 'package:gerenciamento_de_estado/models/order_list.dart';
 import 'package:gerenciamento_de_estado/models/product_list.dart';
 import 'package:gerenciamento_de_estado/screen/auth_screen.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => OrderList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
         ),
       ],
       child: MaterialApp(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gerenciamento_de_estado/utils/http_exception.dart';
+import 'package:gerenciamento_de_estado/utils/exceptions/http_exception.dart';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
