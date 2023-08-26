@@ -26,14 +26,22 @@ class OrderList with ChangeNotifier {
   Future<void> loadOrders() async {
     List<Order> items = [];
 
-    final response =
-        await http.get(Uri.parse("${UrlList.ORDER}$_uid.json?auth=$_token"));
+    ///$uid/$id.json?auth=$token
+    final response = await http.get(
+      Uri.parse("${UrlList.ORDER}$_uid.json?auth=$_token"),
+    );
 
     if (response.body == 'null') {
       return;
     }
 
     Map<String, dynamic> data = jsonDecode(response.body);
+
+    print("Token:$_token");
+    print("Uid:$_uid");
+
+    print(data);
+
     data.forEach((orderId, orderData) {
       items.add(
         Order(
