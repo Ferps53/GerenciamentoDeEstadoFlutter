@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_estado/utils/exceptions/http_exception.dart';
+import 'package:gerenciamento_de_estado/utils/url.dart';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
@@ -26,12 +27,13 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  final _baseUrl = 'https://shop-ferps53-default-rtdb.firebaseio.com/products';
-  Future<void> toggleFavorite(String token) async {
+  Future<void> toggleFavorite(String token, String uid) async {
     _toggleFavorite();
-    final response = await http.patch(
-      Uri.parse("$_baseUrl/$id.json?auth=$token"),
-      body: jsonEncode({"isFavorite": isFavorite}),
+    final response = await http.put(
+      Uri.parse(
+        "${UrlList.USER_FAVORITE}/$uid/$id.json?auth=$token",
+      ),
+      body: jsonEncode(isFavorite),
     );
 
     if (response.statusCode >= 400) {

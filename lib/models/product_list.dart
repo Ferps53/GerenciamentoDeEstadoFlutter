@@ -39,7 +39,6 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           imageUrl: productData['iamgeUrl'],
           price: productData['price'],
-          isFavorite: productData['isFavorite'],
         ),
       );
     });
@@ -55,7 +54,6 @@ class ProductList with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'iamgeUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
         },
       ),
     );
@@ -107,7 +105,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse("${UrlList.PRODUCT}/${product.id}.json?auth=$_token"),
+        Uri.parse("${UrlList.PRODUCT}/${product.id}.json"),
       );
 
       if (response.statusCode >= 400) {
